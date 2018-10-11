@@ -12,8 +12,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Author
  *
  * @ApiResource(attributes={
- *     "normalization_context"={"groups"={"read"}},
- *     "denormalization_context"={"groups"={"write"}}
+ *      "normalization_context"={"groups"={"read"}},
+ *      "denormalization_context"={"groups"={"write"},
+ *      "pagination_client_enabled"=true
+ *     }
  * })
  * @ORM\Table(name="author")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")

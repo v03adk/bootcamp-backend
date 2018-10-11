@@ -28,6 +28,6 @@ class QuoteRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $query->setParameter(1, $site->getId());
 
-        return $query->getSingleResult();
+        return $query->getOneOrNullResult();
     }
 }

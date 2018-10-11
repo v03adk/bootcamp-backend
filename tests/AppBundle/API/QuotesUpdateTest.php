@@ -178,6 +178,19 @@ class QuotesUpdateTest extends AbstractWebTestCase
         $this->assertJson($content);
         $quotes = json_decode($content, true);
         $this->assertCount(6, $quotes);
+
+        /*** test that put for quote from another site does not work ***/
+        $this->client->request(
+            'PUT',
+            '/api/quotes/'.$quotes[0]['id'],
+            [],
+            [],
+            ['HTTP_accept' => 'application/json', 'HTTP_apikey' => 'first_site_apikey', 'CONTENT_TYPE' => 'application/json'],
+            json_encode(['quote' => 'The truth is out there'])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testDelete()
@@ -230,5 +243,18 @@ class QuotesUpdateTest extends AbstractWebTestCase
             $newQuotesIds[] = $quote['id'];
         }
         $this->assertNotContains($quotes[0]['id'], $newQuotesIds);
+
+
+        /*** test that delete for quote from another site does not work ***/
+        $this->client->request(
+            'DELETE',
+            '/api/quotes/'.$quotes[0]['id'],
+            [],
+            [],
+            ['HTTP_accept' => 'application/json', 'HTTP_apikey' => 'first_site_apikey']
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

@@ -159,6 +159,19 @@ class AuthorsUpdateTest extends AbstractWebTestCase
         $this->assertJson($content);
         $authorsFirstSite = json_decode($content, true);
         $this->assertCount(2, $authorsFirstSite);
+
+        /*** test that put for author from another site does not work ***/
+        $this->client->request(
+            'PUT',
+            '/api/authors/'.$authorsFirstSite[0]['id'],
+            [],
+            [],
+            ['HTTP_accept' => 'application/json', 'HTTP_apikey' => 'second_site_apikey', 'CONTENT_TYPE' => 'application/json'],
+            json_encode(['lastname' => 'London edited'])
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testDelete()
@@ -207,5 +220,17 @@ class AuthorsUpdateTest extends AbstractWebTestCase
         $authorsFirstSite = json_decode($content, true);
         $this->assertCount(1, $authorsFirstSite);
         $this->assertEquals('Tolkien', $authorsFirstSite[0]['lastname']);
+
+        /*** test that delete for author from another site does not work ***/
+        $this->client->request(
+            'DELETE',
+            '/api/authors/'.$authorsFirstSite[0]['id'],
+            [],
+            [],
+            ['HTTP_accept' => 'application/json', 'HTTP_apikey' => 'second_site_apikey']
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

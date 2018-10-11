@@ -2,18 +2,32 @@
 
 namespace Tests\AppBundle\API;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use AppBundle\DataFixtures\LoadSite;
+use AppBundle\Test\AbstractWebTestCase;
 
-class SecurityTest extends WebTestCase
+/**
+ * Class SecurityTest
+ */
+class SecurityTest extends AbstractWebTestCase
 {
+    /**
+     * setUp
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->loadFixtures([
+            LoadSite::class,
+        ]);
+    }
+
     /**
      * @dataProvider provideUrls
      */
     public function testWhenCredentialsNotProvided($url)
     {
-        $client = static::createClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             $url,
             [],
@@ -21,7 +35,7 @@ class SecurityTest extends WebTestCase
             ['HTTP_accept' => 'application/json']
         );
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals('Invalid credentials.', $response->getContent());
     }
@@ -31,9 +45,7 @@ class SecurityTest extends WebTestCase
      */
     public function testWhenWrongCredentialsProvided($url)
     {
-        $client = static::createClient();
-
-        $client->request(
+        $this->client->request(
             'GET',
             $url,
             [],
@@ -41,9 +53,26 @@ class SecurityTest extends WebTestCase
             ['HTTP_accept' => 'application/json', 'HTTP_apikey' => 'some_apikey']
         );
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals('API Key "some_apikey" does not exist.', $response->getContent());
+    }
+
+    /**
+     * @dataProvider provideUrls
+     */
+    public function testWhenCorrectCredentialsProvided($url)
+    {
+        $this->client->request(
+            'GET',
+            $url,
+            [],
+            [],
+            ['HTTP_accept' => 'application/json', 'HTTP_apikey' => 'first_site_apikey']
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertContains($response->getStatusCode(), [200, 404]);
     }
 
     public function provideUrls()
@@ -51,6 +80,7 @@ class SecurityTest extends WebTestCase
         return array(
             array('/api/authors'),
             array('/api/quotes'),
+            array('/api/quotes/random'),
         );
     }
 }
