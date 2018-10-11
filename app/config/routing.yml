@@ -1,0 +1,37 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+#app_action:
+#    resource: '@AppBundle/Action/'
+#    type: annotation
+
+#author_post:
+#    path: '/api/authors'
+#    methods:  ['POST']
+#    defaults:
+#        _controller: '\AppBundle\Controller\Author::post'
+#        _api_resource_class: 'AppBundle\Entity\Author'
+#        _api_item_operation_name: 'post'
+
+#quotes_random:
+#    path: '/api/quotes/random/{id}'
+#    methods:  [GET]
+#    defaults:
+#        id: 0
+#        _controller: 'AppBundle\Controller\Api\QuotesController:randomAction'
+#        _api_resource_class: 'AppBundle\Entity\Quote'
+#        _api_item_operation_name: 'special'
+
+#quote_post:
+#    path: '/api/quotes'
+#    methods:  ['POST']
+#    defaults:
+#        _controller: '\AppBundle\Controller\Quotes::post'
+#        _api_resource_class: 'AppBundle\Entity\Quote'
+#        _api_item_operation_name: 'post'
+
+api_platform:
+    resource: '.'
+    type: 'api_platform'
+    prefix: '/api'
