@@ -2,10 +2,12 @@
 
 namespace AppBundle\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * Quote
@@ -14,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "normalization_context"={"groups"={"read"}},
  *     "denormalization_context"={"groups"={"writeQuote"}}
  * })
+ * @ApiFilter(SearchFilter::class, properties={"author": "exact"})
  * @ORM\Table(name="quote")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\QuoteRepository")
  */
