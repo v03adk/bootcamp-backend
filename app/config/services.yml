@@ -50,3 +50,8 @@ services:
     'AppBundle\DataProvider\QuoteItemDataProvider':
         tags:
             - { name: 'api_platform.item_data_provider' }
+
+    'AppBundle\Swagger\SwaggerDecorator':
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: [ '@AppBundle\Swagger\SwaggerDecorator.inner' ]
+        autoconfigure: false
