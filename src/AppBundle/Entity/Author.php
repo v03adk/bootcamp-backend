@@ -46,7 +46,6 @@ class Author
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=255)
-     * @Assert\NotBlank
      * @Groups({"read", "write"})
      */
     private $lastname;
